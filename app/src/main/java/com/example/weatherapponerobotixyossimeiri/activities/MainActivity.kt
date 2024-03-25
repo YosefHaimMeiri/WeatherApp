@@ -11,6 +11,7 @@ import com.example.weatherapponerobotixyossimeiri.BuildConfig
 import com.example.weatherapponerobotixyossimeiri.R
 import com.example.weatherapponerobotixyossimeiri.databinding.ActivityMainBinding
 import com.example.weatherapponerobotixyossimeiri.models.WeatherData
+import com.example.weatherapponerobotixyossimeiri.utils.GenericUtils
 import com.example.weatherapponerobotixyossimeiri.utils.LocationHelper
 import com.example.weatherapponerobotixyossimeiri.viewmodels.WeatherViewModel
 import retrofit2.Call
@@ -71,7 +72,7 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
                         if (response.isSuccessful && response.body() != null) {
                             var weatherData : WeatherData = response.body()!!
                             binding.cityTv.text = weatherData.cityName
-                            binding.degreesTV.text = weatherData.mainTemperatureData.temp.toInt().toString() + "°";
+                            binding.degreesTV.text = (GenericUtils.kelvinToCelsius(weatherData.mainTemperatureData.temp)).toString() + "°";
 
                         } else {
                             binding.degreesTV.text = "Failed to get data from API";
