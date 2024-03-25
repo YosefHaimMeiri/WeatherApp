@@ -11,11 +11,11 @@ interface IWeatherApiService {
         @Query("lat") latitude: Double,
         @Query("lon") longitude: Double,
         @Query("appid") apiKey: String?
-    ): Call<WeatherData?>?
+    ): Call<WeatherData>
 
     @GET("weather")
     fun getCurrentWeatherByCityAndCountry(
         @Query("q") cityCountry: String?,
         @Query("appid") apiKey: String?
-    ): Call<WeatherData?>?
+    ): Call<WeatherData>
 }
