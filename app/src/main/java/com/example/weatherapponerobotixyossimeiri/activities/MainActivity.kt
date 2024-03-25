@@ -48,6 +48,14 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
 
     override fun onResume() {
         super.onResume()
+
+
+    }
+
+    override fun onLocationChanged(lon: Double, lat: Double) {
+        binding.latTv.text = lat.toString();
+        binding.lonTv.text = lon.toString();
+
         // TODO: Handle location getting + API Requests here
         binding.progressBar.visibility = View.VISIBLE;
         if (locationHelper.isLocationAvailable()) {
@@ -62,6 +70,8 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
                     ) {
                         if (response.isSuccessful && response.body() != null) {
                             var weatherData : WeatherData = response.body()!!
+                            binding.cityTv.text = weatherData.cityName
+                            binding.degreesTV.text = weatherData.mainTemperatureData.temp.toInt().toString() + "°";
 
                         } else {
                             binding.degreesTV.text = "Failed to get data from API";
@@ -81,12 +91,7 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
             // TODO: Log error
         }
 
-    }
-
-    override fun onLocationChanged(lon: Double, lat: Double) {
         binding.progressBar.visibility = View.GONE;
-        binding.latTv.text = lat.toString();
-        binding.lonTv.text = lon.toString();
     }
 
 
