@@ -1,56 +1,45 @@
 package com.example.weatherapponerobotixyossimeiri.utils
 
 import android.Manifest
-import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
-import android.location.Location
-import android.location.LocationListener
-import android.location.LocationManager
-import android.os.Bundle
-import android.util.Log
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
 
-class LocationHelper(context: Context) : LocationListener {
+class LocationHelper(private val context : Context)  {
     private val TAG = "LocationUtil"
-    private var context: Context? = context
-    private var locationManager: LocationManager? = null
-    private var onLocationChangeListener: OnLocationChangeListener? = null
+    private val fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
 
+    var lon : Double? = null
+        private set
+    var lat : Double? = null
+        private set
 
-    interface OnLocationChangeListener {
-        fun onLocationChanged(location: Location?)
-    }
-
-    fun requestLocationUpdates(listener: OnLocationChangeListener?) {
-        onLocationChangeListener = listener
-        locationManager = context!!.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        if (locationManager != null && ContextCompat.checkSelfPermission(
-                context!!,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            locationManager!!.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0f, this)
+    /**
+     * Attempt to get the current location - might return null if FusedLocationProviderClient couldn't retrieve it
+     */
+    fun updateCurrentLocation(context : Context) {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(context as Activity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 100)
+            updateCurrentLocation(context);
         } else {
-            Log.e(TAG, "Permission denied or LocationManager is null")
+            fusedLocationProviderClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, null).addOnSuccessListener {
+                if (it != null) {
+                    lon = it.longitude;
+                    lat = it.latitude
+                }
+            }
         }
     }
 
-
-    fun removeLocationUpdates() {
-        locationManager?.removeUpdates(this)
+    fun isLocationAvailable() : Boolean {
+        return lon != null && lat != null;
     }
 
-    override fun onLocationChanged(location: Location) {
-        Log.d(TAG, "Latitude: " + location.latitude + ", Longitude: " + location.longitude)
-        if (onLocationChangeListener != null) {
-            onLocationChangeListener!!.onLocationChanged(location)
-        }
-    }
 
-    override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
 
-    override fun onProviderEnabled(provider: String) {}
 
-    override fun onProviderDisabled(provider: String) {}
 }

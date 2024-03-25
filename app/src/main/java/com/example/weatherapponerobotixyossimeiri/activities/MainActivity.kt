@@ -7,12 +7,15 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.weatherapponerobotixyossimeiri.BuildConfig
 import com.example.weatherapponerobotixyossimeiri.R
+import com.example.weatherapponerobotixyossimeiri.utils.LocationHelper
 
 class MainActivity : AppCompatActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        val API_KEY = BuildConfig.OPENWEATHER_API_KEY;
+    val API_KEY = BuildConfig.OPENWEATHER_API_KEY;
+    lateinit var locationHelper: LocationHelper;
 
+
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
@@ -21,5 +24,17 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        locationHelper = LocationHelper(this);
     }
+
+    override fun onStart() {
+        super.onStart()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // TODO: Handle location getting + API Requests here
+    }
+
 }
