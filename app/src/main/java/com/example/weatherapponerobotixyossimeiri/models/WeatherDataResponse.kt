@@ -10,7 +10,7 @@ data class WeatherDataResponse(
     @SerializedName("wind")        val wind: Wind,
     @SerializedName("visibility")  val visibility: Int,
     @SerializedName("sys")         val systemInfo: SystemInformation,
-
+    @SerializedName("rain")        val rain: Rain,
 
     /**
      * From here -> Fields that are unavailable in the forecast data
@@ -27,6 +27,10 @@ data class WeatherDataResponse(
      */
     @SerializedName("dt_text") val dateTimeText: String
 
+)
+
+data class Rain(
+    @SerializedName("_1h") val chanceOfRain: Double
 )
 
 data class Coordinates(

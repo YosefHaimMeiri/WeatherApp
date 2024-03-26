@@ -130,15 +130,15 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
 
         binding.currentCityTV.text = weatherData.cityName
         binding.degreesTv.text = String.format(
-            WeatherStrings.weatherWithDegrees,
+            WeatherStrings.WEATHER_WITH_DEGREES,
             (GenericUtils.kelvinToCelsius(weatherData.mainTemperatureData.temp)).toString()
         )
         binding.highDegreesTV.text = String.format(
-            WeatherStrings.highWeatherWithDegrees,
+            WeatherStrings.HIGH_WEATHER_WITH_DEGREES,
             (GenericUtils.kelvinToCelsius(weatherData.mainTemperatureData.tempMax)).toString()
         )
         binding.lowDegreesTv.text = String.format(
-            WeatherStrings.lowWeatherWithDegrees,
+            WeatherStrings.LOW_WEATHER_WITH_DEGREES,
             (GenericUtils.kelvinToCelsius(weatherData.mainTemperatureData.tempMin)).toString()
         )
         binding.weatherConditionsTv.text =
@@ -146,6 +146,14 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
 
         binding.humidityTv.text = String.format("%s%%",weatherData.mainTemperatureData.humidity)
         binding.windTv.text = String.format("%SMpH", weatherData.wind.speed);
+
+
+        if (weatherData.rain != null) {
+            binding.rainTv.text = String.format("%s%%",weatherData.rain.chanceOfRain);
+        } else {
+            binding.rainTv.text = getString(R.string.no_rain);
+        }
+;
     }
 
     private fun fetchAndUpdateWeatherIcon(weatherData: WeatherDataResponse) {

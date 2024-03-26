@@ -1,7 +1,7 @@
 package com.example.weatherapponerobotixyossimeiri.strings
 
 object WeatherStrings {
-    val weatherWithDegrees = "%s°"
-    val highWeatherWithDegrees = "H: %s°"
-    val lowWeatherWithDegrees = "L: %s°"
+    const val WEATHER_WITH_DEGREES = "%s°"
+    const val HIGH_WEATHER_WITH_DEGREES = "H: %s°"
+    const val LOW_WEATHER_WITH_DEGREES = "L: %s°"
 }
