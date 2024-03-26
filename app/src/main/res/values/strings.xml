@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">WeatherAppOneRobotixYossiMeiri</string>
     <string name="degreesPlaceholder">---</string>
+    <string name="wind">Wind:</string>
+    <string name="humidity">Humidity:</string>
+    <string name="humidityicon">humidityIcon</string>
 </resources>

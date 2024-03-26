@@ -9,6 +9,10 @@ import com.example.weatherapponerobotixyossimeiri.services.WeatherApiClient
 import retrofit2.Call
 
 class WeatherViewModel(val repo : WeatherDataRepo) : ViewModel(){
+    // Cached data
+    var currentWeatherData: WeatherDataResponse? = null
+    var forecastWeatherData: WeatherForecastResponse? = null
+
     constructor() : this(WeatherDataRepo(WeatherApiClient.getClient().create(IWeatherApiService::class.java)))
 
     fun loadCurrentWeatherByCoordinates(lat: Double, lon: Double): Call<WeatherDataResponse> {

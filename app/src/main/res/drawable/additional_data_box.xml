@@ -1,0 +1,21 @@
+<!-- box_background.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <!-- Gradient background -->
+    <gradient
+        android:startColor="#807393B3"
+        android:endColor="#803F51B5"
+        android:type="linear"
+        android:angle="45"
+        />
+
+    <stroke
+        android:width="2dp"
+        android:color="#6F8FAF"/>
+
+    <corners
+        android:radius="8dp"/>
+
+    <corners
+        android:radius="8dp" />
+</shape>

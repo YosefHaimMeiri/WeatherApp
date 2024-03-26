@@ -15,7 +15,6 @@ import com.example.weatherapponerobotixyossimeiri.utils.GenericUtils
 import com.example.weatherapponerobotixyossimeiri.utils.LocationHelper
 import com.example.weatherapponerobotixyossimeiri.utils.WeatherCodeUtils
 import com.example.weatherapponerobotixyossimeiri.viewmodels.WeatherViewModel
-import com.squareup.picasso.Picasso
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -106,12 +105,8 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
                         var weatherData: WeatherDataResponse = response.body()!!
 
 
-                        binding.progressBar.visibility = View.GONE
-                        binding.currentCityTV.text = weatherData.cityName
-                        binding.degreesTv.text = String.format(WeatherStrings.weatherWithDegrees, (GenericUtils.kelvinToCelsius(weatherData.mainTemperatureData.temp)).toString())
-                        binding.highDegreesTV.text = String.format(WeatherStrings.highWeatherWithDegrees,  (GenericUtils.kelvinToCelsius(weatherData.mainTemperatureData.tempMax)).toString())
-                        binding.lowDegreesTv.text = String.format(WeatherStrings.lowWeatherWithDegrees,  (GenericUtils.kelvinToCelsius(weatherData.mainTemperatureData.tempMin)).toString())
-                        binding.weatherConditionsTv.text = GenericUtils.capitalizeEveryWord(weatherData.weather[0].description)
+                        weatherViewModel.currentWeatherData = weatherData;
+                        updateCurrentWeatherUI(weatherData)
 
 
                         fetchAndUpdateWeatherIcon(weatherData);
@@ -126,6 +121,31 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
                 }
 
             })
+    }
+
+    private fun updateCurrentWeatherUI(weatherData: WeatherDataResponse) {
+
+        binding.progressBar.visibility = View.GONE
+        binding.additionalInfoLl.visibility = View.VISIBLE
+
+        binding.currentCityTV.text = weatherData.cityName
+        binding.degreesTv.text = String.format(
+            WeatherStrings.weatherWithDegrees,
+            (GenericUtils.kelvinToCelsius(weatherData.mainTemperatureData.temp)).toString()
+        )
+        binding.highDegreesTV.text = String.format(
+            WeatherStrings.highWeatherWithDegrees,
+            (GenericUtils.kelvinToCelsius(weatherData.mainTemperatureData.tempMax)).toString()
+        )
+        binding.lowDegreesTv.text = String.format(
+            WeatherStrings.lowWeatherWithDegrees,
+            (GenericUtils.kelvinToCelsius(weatherData.mainTemperatureData.tempMin)).toString()
+        )
+        binding.weatherConditionsTv.text =
+            GenericUtils.capitalizeEveryWord(weatherData.weather[0].description)
+
+        binding.humidityTv.text = String.format("%s%%",weatherData.mainTemperatureData.humidity)
+        binding.windTv.text = String.format("%SMpH", weatherData.wind.speed);
     }
 
     private fun fetchAndUpdateWeatherIcon(weatherData: WeatherDataResponse) {
