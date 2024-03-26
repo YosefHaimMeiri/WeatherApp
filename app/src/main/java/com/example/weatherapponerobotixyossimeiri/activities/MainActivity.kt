@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.weatherapponerobotixyossimeiri.BuildConfig
 import com.example.weatherapponerobotixyossimeiri.R
 import com.example.weatherapponerobotixyossimeiri.adapters.ForecastDataAdapter
 import com.example.weatherapponerobotixyossimeiri.databinding.ActivityMainBinding
@@ -18,6 +19,7 @@ import com.example.weatherapponerobotixyossimeiri.utils.GenericUtils
 import com.example.weatherapponerobotixyossimeiri.utils.LocationHelper
 import com.example.weatherapponerobotixyossimeiri.utils.WeatherCodeUtils
 import com.example.weatherapponerobotixyossimeiri.viewmodels.WeatherViewModel
+import com.squareup.picasso.Picasso
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -72,6 +74,7 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
             if (lat != null && lon != null) {
                 updateCurrentWeather(lat, lon)
                 updateForecastWeather(lat, lon)
+                updateUi(lat,lon);
             }
 
         } else {
@@ -114,13 +117,8 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
                 ) {
                     if (response.isSuccessful && response.body() != null) {
                         var weatherData: WeatherDataResponse = response.body()!!
-
-
                         weatherViewModel.currentWeatherData = weatherData;
                         updateCurrentWeatherUI(weatherData)
-
-
-                        fetchAndUpdateWeatherIcon(weatherData);
 
                     } else {
                         binding.degreesTv.text = "Failed to get data from API";
@@ -167,10 +165,11 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
 ;
     }
 
-    private fun fetchAndUpdateWeatherIcon(weatherData: WeatherDataResponse) {
-        val iconUrl : String = String.format(WeatherCodeUtils.iconUrlPlaceholder, weatherData.weather[0].icon);
+    private fun updateUi(lat: Double, lon: Double) {
+        val (xTile, yTile) = GenericUtils.latLonToTileCoordinates(lat, lon)
+        val iconUrl : String = String.format(WeatherCodeUtils.mapUrlPlaceholder, GenericUtils.zoomLevel, xTile, yTile, BuildConfig.OPENWEATHER_API_KEY);
+        Picasso.get().load(iconUrl).into(binding.mapIv)
 
-//        Picasso.get().load(iconUrl).into(binding.weatherIv)
     }
 
 }

@@ -5,7 +5,8 @@ class WeatherCodeUtils {
     val iconUrlPlaceholder = "https://openweathermap.org/img/wn/%s.png"
 
     companion object {
-        val iconUrlPlaceholder = "https://openweathermap.org/img/wn/%s.png"
+        val iconUrlPlaceholder = "https://openweathermap.org/img/wn/%s.png";
+        val mapUrlPlaceholder = "https://tile.openweathermap.org/map/precipitation_new/%s/%s/%s.png?appid=%s" // zoom, x, y, apikey
 
         val weatherCodeToDescriptionMap = mapOf(
             200 to "thunderstorm with light rain",
