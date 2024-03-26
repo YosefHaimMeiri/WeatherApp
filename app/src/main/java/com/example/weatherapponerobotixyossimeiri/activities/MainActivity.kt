@@ -1,12 +1,15 @@
 package com.example.weatherapponerobotixyossimeiri.activities
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.weatherapponerobotixyossimeiri.R
+import com.example.weatherapponerobotixyossimeiri.adapters.ForecastDataAdapter
 import com.example.weatherapponerobotixyossimeiri.databinding.ActivityMainBinding
 import com.example.weatherapponerobotixyossimeiri.models.WeatherDataResponse
 import com.example.weatherapponerobotixyossimeiri.models.WeatherForecastResponse
@@ -21,9 +24,11 @@ import retrofit2.Response
 
 class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener {
 
+    val TAG = "MainActivity"
     lateinit var locationHelper: LocationHelper;
     lateinit var binding: ActivityMainBinding
     private lateinit var weatherViewModel:WeatherViewModel
+    private lateinit var forecastAdapter : ForecastDataAdapter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,6 +47,10 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
         locationHelper.setLocationChangeListener(this)
         locationHelper.updateCurrentLocation()
         weatherViewModel = WeatherViewModel()
+        forecastAdapter = ForecastDataAdapter(emptyList())
+        binding.forecastRv.layoutManager = LinearLayoutManager(this)
+
+
     }
 
     override fun onStart() {
@@ -56,7 +65,6 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
 
     override fun onLocationChanged(lon: Double, lat: Double) {
 
-        // TODO: Handle location getting + API Requests here
         if (locationHelper.isLocationAvailable()) {
             val lat : Double? = locationHelper.lat;
             val lon : Double? = locationHelper.lon;
@@ -64,12 +72,10 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
             if (lat != null && lon != null) {
                 updateCurrentWeather(lat, lon)
                 updateForecastWeather(lat, lon)
-            } else {
-                // Shouldn't ever get here
             }
 
         } else {
-            // TODO: Log error
+            Log.e(TAG, "No location available")
         }
     }
 
@@ -82,8 +88,13 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
                 ) {
                     if (response.isSuccessful && response.body() != null) {
                         var weatherData: WeatherForecastResponse = response.body()!!
+                        var forecastDataList = GenericUtils.filterForecastData(weatherData.list);
+                        forecastAdapter = ForecastDataAdapter(forecastDataList);
+                        forecastAdapter.notifyDataSetChanged();
+                        binding.forecastRv.adapter = forecastAdapter;
 
                     } else {
+
                     }
                 }
 
