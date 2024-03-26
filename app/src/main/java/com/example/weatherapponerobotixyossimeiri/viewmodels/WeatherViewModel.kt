@@ -1,6 +1,7 @@
 package com.example.weatherapponerobotixyossimeiri.viewmodels
 
 import androidx.lifecycle.ViewModel
+import com.example.weatherapponerobotixyossimeiri.models.DailyWeatherAndForecastResponse
 import com.example.weatherapponerobotixyossimeiri.models.WeatherDataResponse
 import com.example.weatherapponerobotixyossimeiri.models.WeatherForecastResponse
 import com.example.weatherapponerobotixyossimeiri.repos.WeatherDataRepo
@@ -17,6 +18,10 @@ class WeatherViewModel(val repo : WeatherDataRepo) : ViewModel(){
 
     fun loadCurrentWeatherByCoordinates(lat: Double, lon: Double): Call<WeatherDataResponse> {
         return repo.getCurrentWeatherByCoordinates(lat,lon);
+    }
+
+    fun loadCurrentWeatherAndForecastByCoordinates(lat: Double, lon: Double): Call<DailyWeatherAndForecastResponse> {
+        return repo.getDailyWeatherAndForecastByCoordinates(lat,lon);
     }
 
 

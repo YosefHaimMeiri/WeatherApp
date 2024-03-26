@@ -12,6 +12,7 @@ import com.example.weatherapponerobotixyossimeiri.BuildConfig
 import com.example.weatherapponerobotixyossimeiri.R
 import com.example.weatherapponerobotixyossimeiri.adapters.ForecastDataAdapter
 import com.example.weatherapponerobotixyossimeiri.databinding.ActivityMainBinding
+import com.example.weatherapponerobotixyossimeiri.models.DailyWeatherAndForecastResponse
 import com.example.weatherapponerobotixyossimeiri.models.WeatherDataResponse
 import com.example.weatherapponerobotixyossimeiri.models.WeatherForecastResponse
 import com.example.weatherapponerobotixyossimeiri.strings.WeatherStrings
@@ -74,7 +75,6 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
             if (lat != null && lon != null) {
                 updateCurrentWeather(lat, lon)
                 updateForecastWeather(lat, lon)
-                updateUi(lat,lon);
             }
 
         } else {
@@ -83,25 +83,26 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
     }
 
     private fun updateForecastWeather(lat: Double, lon: Double) {
-        weatherViewModel.loadForecastByCoordinates(lat, lon)
-            .enqueue(object : Callback<WeatherForecastResponse> {
+        weatherViewModel.loadCurrentWeatherAndForecastByCoordinates(lat, lon)
+            .enqueue(object : Callback<DailyWeatherAndForecastResponse> {
                 override fun onResponse(
-                    call: Call<WeatherForecastResponse>,
-                    response: Response<WeatherForecastResponse>
+                    call: Call<DailyWeatherAndForecastResponse>,
+                    response: Response<DailyWeatherAndForecastResponse>
                 ) {
                     if (response.isSuccessful && response.body() != null) {
-                        var weatherData: WeatherForecastResponse = response.body()!!
-                        var forecastDataList = GenericUtils.filterForecastData(weatherData.list);
+                        var weatherData: DailyWeatherAndForecastResponse = response.body()!!
+                        var forecastDataList = GenericUtils.filterForecastData(weatherData.daily);
                         forecastAdapter = ForecastDataAdapter(forecastDataList);
                         forecastAdapter.notifyDataSetChanged();
                         binding.forecastRv.adapter = forecastAdapter;
 
                     } else {
-
+                        Log.e(TAG, response.message())
                     }
                 }
 
-                override fun onFailure(call: Call<WeatherForecastResponse>, t: Throwable) {
+                override fun onFailure(call: Call<DailyWeatherAndForecastResponse>, t: Throwable) {
+                    Log.e(TAG, t.message.toString())
 
                 }
 
@@ -163,13 +164,6 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
             binding.rainTv.text = getString(R.string.no_rain);
         }
 ;
-    }
-
-    private fun updateUi(lat: Double, lon: Double) {
-        val (xTile, yTile) = GenericUtils.latLonToTileCoordinates(lat, lon)
-        val iconUrl : String = String.format(WeatherCodeUtils.mapUrlPlaceholder, GenericUtils.zoomLevel, xTile, yTile, BuildConfig.OPENWEATHER_API_KEY);
-        Picasso.get().load(iconUrl).into(binding.mapIv)
-
     }
 
 }

@@ -1,6 +1,7 @@
 package com.example.weatherapponerobotixyossimeiri.repos
 
 import com.example.weatherapponerobotixyossimeiri.BuildConfig
+import com.example.weatherapponerobotixyossimeiri.models.DailyWeatherAndForecastResponse
 import com.example.weatherapponerobotixyossimeiri.models.WeatherDataResponse
 import com.example.weatherapponerobotixyossimeiri.models.WeatherForecastResponse
 import com.example.weatherapponerobotixyossimeiri.services.IWeatherApiService
@@ -14,6 +15,10 @@ class WeatherDataRepo (private val service : IWeatherApiService){
 
     fun getForecastByCoordinates(lat : Double, lon : Double): Call<WeatherForecastResponse> {
         return service.getForecastByCoordinates(lat,lon, BuildConfig.OPENWEATHER_API_KEY);
+    }
+
+    fun getDailyWeatherAndForecastByCoordinates(lat : Double, lon : Double): Call<DailyWeatherAndForecastResponse> {
+        return service.getCurrentWeatherAndForecastByCoordinates(lat,lon, BuildConfig.OPENWEATHER_API_KEY);
     }
 
     fun getCurrentWeatherByCityCountry(city: String, country: String): Call<WeatherDataResponse> {

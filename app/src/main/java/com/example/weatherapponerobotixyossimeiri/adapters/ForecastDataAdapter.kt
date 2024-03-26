@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapponerobotixyossimeiri.databinding.ActivityMainBinding
 import com.example.weatherapponerobotixyossimeiri.databinding.ForecastBinding
+import com.example.weatherapponerobotixyossimeiri.models.Daily
 import com.example.weatherapponerobotixyossimeiri.models.WeatherDataResponse
 import com.example.weatherapponerobotixyossimeiri.strings.WeatherStrings
 import com.example.weatherapponerobotixyossimeiri.utils.GenericUtils
@@ -17,7 +18,7 @@ import java.util.Calendar
 import java.util.Locale
 
 class ForecastDataAdapter(
-    private val weatherDataList: List<WeatherDataResponse>
+    private val weatherDataList: List<Daily>
 ) : RecyclerView.Adapter<ForecastDataAdapter.ViewHolder>() {
 
     lateinit var binding: ForecastBinding
@@ -36,7 +37,7 @@ class ForecastDataAdapter(
         if (position == 0) {
             binding.dayTv.text = "Today"
         } else {
-            val timeMillis = weatherDataList[position].dateTime*1000 // Convert Unix to timestamp
+            val timeMillis = weatherDataList[position].dt*1000 // Convert Unix to timestamp
             val calendar = Calendar.getInstance()
             calendar.timeInMillis = timeMillis;
             val dayOfWeek = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.ENGLISH)
@@ -45,11 +46,11 @@ class ForecastDataAdapter(
 
 
         // Set the low value
-        val low = String.format(WeatherStrings.LOW_WEATHER_WITH_DEGREES, GenericUtils.kelvinToCelsius(weatherDataList[position].mainTemperatureData.tempMin))
+        val low = String.format(WeatherStrings.LOW_WEATHER_WITH_DEGREES, GenericUtils.kelvinToCelsius(weatherDataList[position].temp.min))
         binding.lowTv.text = low
 
         // Set high value
-        val high = String.format(WeatherStrings.HIGH_WEATHER_WITH_DEGREES, GenericUtils.kelvinToCelsius(weatherDataList[position].mainTemperatureData.tempMax))
+        val high = String.format(WeatherStrings.HIGH_WEATHER_WITH_DEGREES, GenericUtils.kelvinToCelsius(weatherDataList[position].temp.max))
         binding.highTv.text = high
 
         // Set weather description

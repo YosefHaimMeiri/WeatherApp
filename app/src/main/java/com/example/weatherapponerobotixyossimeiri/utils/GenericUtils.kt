@@ -1,5 +1,6 @@
 package com.example.weatherapponerobotixyossimeiri.utils
 
+import com.example.weatherapponerobotixyossimeiri.models.Daily
 import com.example.weatherapponerobotixyossimeiri.models.WeatherDataResponse
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -28,15 +29,15 @@ class GenericUtils {
             return Pair(xTile, yTile)
         }
 
-        fun filterForecastData(list: List<WeatherDataResponse>): List<WeatherDataResponse> {
-            val retVal = mutableListOf<WeatherDataResponse>()
+        fun filterForecastData(list: List<Daily>): List<Daily> {
+            val retVal = mutableListOf<Daily>()
 
 
             val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
             var previousDate = ""
 
             for (item in list) {
-                val date = Date(item.dateTime*1000) // Convert timestamp to Date
+                val date = Date(item.dt*1000) // Convert timestamp to Date
                 val currentDate = dateFormat.format(date);
 
                 if (currentDate != previousDate) {
