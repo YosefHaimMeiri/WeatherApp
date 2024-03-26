@@ -3,19 +3,30 @@ package com.example.weatherapponerobotixyossimeiri.models
 import com.google.gson.annotations.SerializedName
 
 data class WeatherDataResponse(
-    @SerializedName("base")        val baseDataSource: String, // E.G. "Stations"
-    @SerializedName("main")        val mainTemperatureData : MainTemperatureData,
-    @SerializedName("coord")       val coordinates: Coordinates,
-    @SerializedName("weather")     val weather: List<Weather>,
-    @SerializedName("visibility")  val visibility: Int,
-    @SerializedName("wind")        val wind: Wind,
-    @SerializedName("clouds")      val clouds: Clouds,
     @SerializedName("dt")          val dateTime: Long,
+    @SerializedName("main")        val mainTemperatureData : MainTemperatureData,
+    @SerializedName("weather")     val weather: List<Weather>,
+    @SerializedName("clouds")      val clouds: Clouds,
+    @SerializedName("wind")        val wind: Wind,
+    @SerializedName("visibility")  val visibility: Int,
     @SerializedName("sys")         val systemInfo: SystemInformation,
+
+
+    /**
+     * From here -> Fields that are unavailable in the forecast data
+     */
+    @SerializedName("base")        val baseDataSource: String, // E.G. "Stations"
+    @SerializedName("coord")       val coordinates: Coordinates,
     @SerializedName("timezone")    val timezone: Int,
     @SerializedName("id")          val cityId: Int,
     @SerializedName("name")        val cityName: String,
-    @SerializedName("cod")         val code: Int
+    @SerializedName("cod")         val code: Int,
+
+    /**
+     * This field is ONLY available in the forecast data!
+     */
+    @SerializedName("dt_text") val dateTimeText: String
+
 )
 
 data class Coordinates(

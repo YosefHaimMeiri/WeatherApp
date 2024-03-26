@@ -9,6 +9,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.weatherapponerobotixyossimeiri.R
 import com.example.weatherapponerobotixyossimeiri.databinding.ActivityMainBinding
 import com.example.weatherapponerobotixyossimeiri.models.WeatherDataResponse
+import com.example.weatherapponerobotixyossimeiri.models.WeatherForecastResponse
 import com.example.weatherapponerobotixyossimeiri.utils.GenericUtils
 import com.example.weatherapponerobotixyossimeiri.utils.LocationHelper
 import com.example.weatherapponerobotixyossimeiri.utils.WeatherCodeUtils
@@ -38,8 +39,9 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
         }
 
         locationHelper = LocationHelper(this)
-        locationHelper.updateCurrentLocation()
         locationHelper.setLocationChangeListener(this)
+
+        locationHelper.updateCurrentLocation()
         weatherViewModel = WeatherViewModel()
     }
 
@@ -65,6 +67,7 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
 
             if (lat != null && lon != null) {
                 updateCurrentWeather(lat, lon)
+                updateForecastWeather(lat, lon)
             } else {
                 // Shouldn't ever get here
             }
@@ -74,6 +77,30 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
         }
 
         binding.progressBar.visibility = View.GONE;
+    }
+
+    private fun updateForecastWeather(lat: Double, lon: Double) {
+        weatherViewModel.loadForecastByCoordinates(lat, lon)
+            .enqueue(object : Callback<WeatherForecastResponse> {
+                override fun onResponse(
+                    call: Call<WeatherForecastResponse>,
+                    response: Response<WeatherForecastResponse>
+                ) {
+                    if (response.isSuccessful && response.body() != null) {
+                        var weatherData: WeatherForecastResponse = response.body()!!
+                        binding.foreCastTv.text = weatherData.cod
+
+                    } else {
+                        binding.foreCastTv.text = "FAIL"
+                    }
+                }
+
+                override fun onFailure(call: Call<WeatherForecastResponse>, t: Throwable) {
+                    binding.foreCastTv.text = "FAIL"
+
+                }
+
+            })
     }
 
     private fun updateCurrentWeather(lat: Double, lon: Double) {
@@ -88,6 +115,7 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
                         binding.cityTv.text = weatherData.cityName
                         binding.degreesTV.text =
                             (GenericUtils.kelvinToCelsius(weatherData.mainTemperatureData.temp)).toString() + "°";
+                        binding.weatherDescriptionTv.text = weatherData.weather[0].description.capitalize();
                         fetchAndUpdateWeatherIcon(weatherData);
 
                     } else {
