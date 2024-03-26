@@ -1,7 +1,12 @@
 package com.example.weatherapponerobotixyossimeiri.utils
 
 class WeatherCodeUtils {
+
+    val iconUrlPlaceholder = "https://openweathermap.org/img/wn/%s.png"
+
     companion object {
+        val iconUrlPlaceholder = "https://openweathermap.org/img/wn/%s.png"
+
         val weatherCodeToDescriptionMap = mapOf(
             200 to "thunderstorm with light rain",
             201 to "thunderstorm with rain",

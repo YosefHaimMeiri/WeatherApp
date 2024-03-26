@@ -2,7 +2,7 @@ package com.example.weatherapponerobotixyossimeiri.models
 
 import com.google.gson.annotations.SerializedName
 
-data class WeatherData(
+data class WeatherDataResponse(
     @SerializedName("base")        val baseDataSource: String, // E.G. "Stations"
     @SerializedName("main")        val mainTemperatureData : MainTemperatureData,
     @SerializedName("coord")       val coordinates: Coordinates,
