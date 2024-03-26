@@ -10,6 +10,7 @@ import com.example.weatherapponerobotixyossimeiri.R
 import com.example.weatherapponerobotixyossimeiri.databinding.ActivityMainBinding
 import com.example.weatherapponerobotixyossimeiri.models.WeatherDataResponse
 import com.example.weatherapponerobotixyossimeiri.models.WeatherForecastResponse
+import com.example.weatherapponerobotixyossimeiri.strings.WeatherStrings
 import com.example.weatherapponerobotixyossimeiri.utils.GenericUtils
 import com.example.weatherapponerobotixyossimeiri.utils.LocationHelper
 import com.example.weatherapponerobotixyossimeiri.utils.WeatherCodeUtils
@@ -40,7 +41,6 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
 
         locationHelper = LocationHelper(this)
         locationHelper.setLocationChangeListener(this)
-
         locationHelper.updateCurrentLocation()
         weatherViewModel = WeatherViewModel()
     }
@@ -56,11 +56,8 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
     }
 
     override fun onLocationChanged(lon: Double, lat: Double) {
-        binding.latTv.text = lat.toString();
-        binding.lonTv.text = lon.toString();
 
         // TODO: Handle location getting + API Requests here
-        binding.progressBar.visibility = View.VISIBLE;
         if (locationHelper.isLocationAvailable()) {
             val lat : Double? = locationHelper.lat;
             val lon : Double? = locationHelper.lon;
@@ -75,8 +72,6 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
         } else {
             // TODO: Log error
         }
-
-        binding.progressBar.visibility = View.GONE;
     }
 
     private fun updateForecastWeather(lat: Double, lon: Double) {
@@ -88,15 +83,12 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
                 ) {
                     if (response.isSuccessful && response.body() != null) {
                         var weatherData: WeatherForecastResponse = response.body()!!
-                        binding.foreCastTv.text = weatherData.cod
 
                     } else {
-                        binding.foreCastTv.text = "FAIL"
                     }
                 }
 
                 override fun onFailure(call: Call<WeatherForecastResponse>, t: Throwable) {
-                    binding.foreCastTv.text = "FAIL"
 
                 }
 
@@ -112,19 +104,25 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
                 ) {
                     if (response.isSuccessful && response.body() != null) {
                         var weatherData: WeatherDataResponse = response.body()!!
-                        binding.cityTv.text = weatherData.cityName
-                        binding.degreesTV.text =
-                            (GenericUtils.kelvinToCelsius(weatherData.mainTemperatureData.temp)).toString() + "°";
-                        binding.weatherDescriptionTv.text = weatherData.weather[0].description.capitalize();
+
+
+                        binding.progressBar.visibility = View.GONE
+                        binding.currentCityTV.text = weatherData.cityName
+                        binding.degreesTv.text = String.format(WeatherStrings.weatherWithDegrees, (GenericUtils.kelvinToCelsius(weatherData.mainTemperatureData.temp)).toString())
+                        binding.highDegreesTV.text = String.format(WeatherStrings.highWeatherWithDegrees,  (GenericUtils.kelvinToCelsius(weatherData.mainTemperatureData.tempMax)).toString())
+                        binding.lowDegreesTv.text = String.format(WeatherStrings.lowWeatherWithDegrees,  (GenericUtils.kelvinToCelsius(weatherData.mainTemperatureData.tempMin)).toString())
+                        binding.weatherConditionsTv.text = GenericUtils.capitalizeEveryWord(weatherData.weather[0].description)
+
+
                         fetchAndUpdateWeatherIcon(weatherData);
 
                     } else {
-                        binding.degreesTV.text = "Failed to get data from API";
+                        binding.degreesTv.text = "Failed to get data from API";
                     }
                 }
 
                 override fun onFailure(call: Call<WeatherDataResponse>, t: Throwable) {
-                    binding.degreesTV.text = "Failed to get data from API";
+                    binding.degreesTv.text = "Failed to get data from API";
                 }
 
             })
@@ -133,9 +131,7 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
     private fun fetchAndUpdateWeatherIcon(weatherData: WeatherDataResponse) {
         val iconUrl : String = String.format(WeatherCodeUtils.iconUrlPlaceholder, weatherData.weather[0].icon);
 
-        Picasso.get().load(iconUrl).into(binding.weatherIcon)
-        binding.weatherIcon.visibility = View.VISIBLE
-
+//        Picasso.get().load(iconUrl).into(binding.weatherIv)
     }
 
 }

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">WeatherAppOneRobotixYossiMeiri</string>
+    <string name="degreesPlaceholder">---</string>
 </resources>
