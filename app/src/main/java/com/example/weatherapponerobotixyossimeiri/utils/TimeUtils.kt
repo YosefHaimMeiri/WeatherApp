@@ -25,8 +25,11 @@ class TimeUtils {
             return retVal
         }
 
+        /**
+         * Converts unix timestamp to human readable hour and minutes (European)
+         */
         fun convertUnixTimestampToHour(unixTimestamp: Long): String {
-            val formatter = SimpleDateFormat("HH:mm")
+            val formatter = SimpleDateFormat("HH:mm", Locale.ENGLISH)
             val date = Date(unixTimestamp)
             return formatter.format(date)
         }

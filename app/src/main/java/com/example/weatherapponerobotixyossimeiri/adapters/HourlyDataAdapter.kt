@@ -8,7 +8,6 @@ import com.example.weatherapponerobotixyossimeiri.models.Hourly
 import com.example.weatherapponerobotixyossimeiri.strings.WeatherStrings
 import com.example.weatherapponerobotixyossimeiri.utils.GenericUtils
 import com.example.weatherapponerobotixyossimeiri.utils.TimeUtils
-import com.example.weatherapponerobotixyossimeiri.utils.WeatherCodeUtils
 import com.squareup.picasso.Picasso
 
 class HourlyDataAdapter(private val hourlyDataList : List<Hourly>) :
@@ -45,7 +44,7 @@ class HourlyDataAdapter(private val hourlyDataList : List<Hourly>) :
 
 
         // Set the weather image
-        val iconUrl : String = String.format(WeatherCodeUtils.iconUrlPlaceholder, hourlyDataList[position].weather[0].icon);
+        val iconUrl : String = String.format(GenericUtils.iconUrlPlaceholder, hourlyDataList[position].weather[0].icon);
         Picasso.get().load(iconUrl).into(binding.iconTv);
     }
 

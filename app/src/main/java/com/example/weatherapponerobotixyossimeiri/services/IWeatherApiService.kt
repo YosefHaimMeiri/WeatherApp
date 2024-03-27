@@ -7,6 +7,8 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface IWeatherApiService {
+
+    // Retrofit GET request to fetch current weather data by coordinates
     @GET("2.5/weather")
     fun getCurrentWeatherByCoordinates(
         @Query("lat") latitude: Double,
@@ -14,6 +16,7 @@ interface IWeatherApiService {
         @Query("appid") apiKey: String?
     ): Call<WeatherDataResponse>
 
+    // Retrofit GET request to fetch current weather and forecast data by coordinates
     @GET("3.0/onecall")
     fun getCurrentWeatherAndForecastByCoordinates(
         @Query("lat") latitude: Double,

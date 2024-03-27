@@ -41,6 +41,7 @@ class LocationHelper(private val context : Context)  {
     }
     /**
      * Attempt to get the current location - might return null if FusedLocationProviderClient couldn't retrieve it
+     * Once location is retrieved, the callback in MainActivity is triggered, which in turn triggers the API fetching
      */
     fun updateCurrentLocation() {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {

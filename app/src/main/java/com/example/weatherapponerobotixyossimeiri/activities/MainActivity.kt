@@ -21,7 +21,6 @@ import com.example.weatherapponerobotixyossimeiri.utils.GenericUtils
 import com.example.weatherapponerobotixyossimeiri.utils.LocationHelper
 import com.example.weatherapponerobotixyossimeiri.utils.PreferenceManagerHelper
 import com.example.weatherapponerobotixyossimeiri.utils.TimeUtils
-import com.example.weatherapponerobotixyossimeiri.viewmodels.LocationViewModel
 import com.example.weatherapponerobotixyossimeiri.viewmodels.WeatherViewModel
 import retrofit2.Call
 import retrofit2.Callback
@@ -30,10 +29,11 @@ import retrofit2.Response
 class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener {
 
     val TAG = "MainActivity"
+
     lateinit var locationHelper: LocationHelper;
     lateinit var binding: ActivityMainBinding
+
     private lateinit var weatherViewModel:WeatherViewModel
-    private lateinit var locationViewModel: LocationViewModel
     private lateinit var forecastAdapter : ForecastDataAdapter
     private lateinit var hourlyAdapter : HourlyDataAdapter
     private lateinit var preferenceManagerHelper: PreferenceManagerHelper
@@ -68,7 +68,6 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
     }
 
     private fun initializeViewModels() {
-        locationViewModel = ViewModelProvider(this).get(LocationViewModel::class.java)
         weatherViewModel = ViewModelProvider(this).get(WeatherViewModel::class.java)
     }
 
@@ -93,6 +92,8 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
             locationHelper.updateCurrentLocation()
             binding.progressBar.visibility = View.VISIBLE
             binding.forecastRv.visibility = View.GONE
+            binding.hourlyRv.visibility = View.GONE
+            binding.additionalInfoLl.visibility = View.GONE
             Handler().postDelayed(Runnable {
                 binding.swipeRefresh.isRefreshing = false
             }, 0)
@@ -114,26 +115,6 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
         retVal = restoreUpdateTime == 0L || isMinutesPassed
 
         return retVal;
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-    }
-
-
-    override fun onStart() {
-        super.onStart()
-
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-
     }
 
     override fun onLocationChanged(lon: Double, lat: Double) {
@@ -182,6 +163,7 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
         var forecastDataList = GenericUtils.filterForecastData(weatherData.daily);
         binding.forecastRv.visibility = View.VISIBLE
         binding.hourlyRv.visibility = View.VISIBLE
+        binding.additionalInfoLl.visibility = View.VISIBLE
         hourlyAdapter = HourlyDataAdapter(weatherData.hourly)
         forecastAdapter = ForecastDataAdapter(forecastDataList)
         binding.forecastRv.adapter = forecastAdapter;

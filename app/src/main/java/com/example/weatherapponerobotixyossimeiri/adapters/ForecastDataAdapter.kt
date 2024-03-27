@@ -7,7 +7,6 @@ import com.example.weatherapponerobotixyossimeiri.databinding.DailyForecastBindi
 import com.example.weatherapponerobotixyossimeiri.models.Daily
 import com.example.weatherapponerobotixyossimeiri.strings.WeatherStrings
 import com.example.weatherapponerobotixyossimeiri.utils.GenericUtils
-import com.example.weatherapponerobotixyossimeiri.utils.WeatherCodeUtils
 import com.squareup.picasso.Picasso
 import java.util.Calendar
 import java.util.Locale
@@ -28,7 +27,6 @@ class ForecastDataAdapter(
         val binding =  DailyForecastBinding.bind(holder.itemView);
 
         // Set the day
-
         if (position == 0) {
             binding.dayTv.text = "Today"
         } else {
@@ -53,7 +51,7 @@ class ForecastDataAdapter(
         binding.descTv.text = desc;
 
         // Set the weather image
-        val iconUrl : String = String.format(WeatherCodeUtils.iconUrlPlaceholder, weatherDataList[position].weather[0].icon);
+        val iconUrl : String = String.format(GenericUtils.iconUrlPlaceholder, weatherDataList[position].weather[0].icon);
         Picasso.get().load(iconUrl).into(binding.iconIv);
     }
 
