@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapponerobotixyossimeiri.databinding.DailyForecastBinding
-import com.example.weatherapponerobotixyossimeiri.models.Daily
+import com.example.weatherapponerobotixyossimeiri.models.DailyWeatherResponse
 import com.example.weatherapponerobotixyossimeiri.strings.WeatherStrings
 import com.example.weatherapponerobotixyossimeiri.utils.GenericUtils
 import com.squareup.picasso.Picasso
@@ -12,7 +12,7 @@ import java.util.Calendar
 import java.util.Locale
 
 class ForecastDataAdapter(
-    private val weatherDataList: List<Daily>
+    private val weatherDataList: List<DailyWeatherResponse>
 ) : RecyclerView.Adapter<ForecastDataAdapter.ViewHolder>() {
 
     lateinit var binding: DailyForecastBinding
@@ -38,13 +38,9 @@ class ForecastDataAdapter(
         }
 
 
-        // Set the low value
-        val low = String.format(WeatherStrings.LOW_WEATHER_WITH_DEGREES, GenericUtils.kelvinToCelsius(weatherDataList[position].temp.min))
-        binding.lowTv.text = low
-
-        // Set high value
-        val high = String.format(WeatherStrings.HIGH_WEATHER_WITH_DEGREES, GenericUtils.kelvinToCelsius(weatherDataList[position].temp.max))
-        binding.highTv.text = high
+        // Set the range value
+        val range = String.format(WeatherStrings.DEGREES_RANGE, GenericUtils.kelvinToCelsius(weatherDataList[position].temp.min), GenericUtils.kelvinToCelsius(weatherDataList[position].temp.max))
+        binding.rangeTv.text = range
 
         // Set weather description
         val desc = weatherDataList[position].weather[0].description;

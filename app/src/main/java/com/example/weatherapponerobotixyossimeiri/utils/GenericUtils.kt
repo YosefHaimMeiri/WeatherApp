@@ -1,14 +1,9 @@
 package com.example.weatherapponerobotixyossimeiri.utils
 
-import com.example.weatherapponerobotixyossimeiri.models.Daily
-import com.example.weatherapponerobotixyossimeiri.models.WeatherDataResponse
+import com.example.weatherapponerobotixyossimeiri.models.DailyWeatherResponse
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import kotlin.math.PI
-import kotlin.math.cos
-import kotlin.math.ln
-import kotlin.math.tan
 
 class GenericUtils {
 
@@ -34,8 +29,8 @@ class GenericUtils {
          * Input: List of daily weather data
          * Output: List of daily weather data, filtered to have only one object for each day
          */
-        fun filterForecastData(list: List<Daily>): List<Daily> {
-            val retVal = mutableListOf<Daily>()
+        fun filterForecastData(list: List<DailyWeatherResponse>): List<DailyWeatherResponse> {
+            val retVal = mutableListOf<DailyWeatherResponse>()
 
 
             val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)

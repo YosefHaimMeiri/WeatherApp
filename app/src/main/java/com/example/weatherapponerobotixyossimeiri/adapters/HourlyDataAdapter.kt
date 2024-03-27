@@ -4,13 +4,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapponerobotixyossimeiri.databinding.HourlyForecastBinding
-import com.example.weatherapponerobotixyossimeiri.models.Hourly
+import com.example.weatherapponerobotixyossimeiri.models.HourlyWeatherResponse
 import com.example.weatherapponerobotixyossimeiri.strings.WeatherStrings
 import com.example.weatherapponerobotixyossimeiri.utils.GenericUtils
 import com.example.weatherapponerobotixyossimeiri.utils.TimeUtils
 import com.squareup.picasso.Picasso
 
-class HourlyDataAdapter(private val hourlyDataList : List<Hourly>) :
+class HourlyDataAdapter(private val hourlyDataList : List<HourlyWeatherResponse>) :
     RecyclerView.Adapter<HourlyDataAdapter.ViewHolder>() {
     lateinit var binding: HourlyForecastBinding
 

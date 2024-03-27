@@ -10,6 +10,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView.ItemAnimator
 import com.example.weatherapponerobotixyossimeiri.R
 import com.example.weatherapponerobotixyossimeiri.adapters.ForecastDataAdapter
 import com.example.weatherapponerobotixyossimeiri.adapters.HourlyDataAdapter
@@ -117,6 +118,11 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
         return retVal;
     }
 
+
+    /**
+     * When location changes, we start the flow to update the data
+     * This only gets called once per LocationHelper location updates request
+     */
     override fun onLocationChanged(lon: Double, lat: Double) {
 
         if (locationHelper.isLocationAvailable()) {
@@ -134,6 +140,10 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
         }
     }
 
+
+    /**
+     * Function to make API call and call the function to update forecast weather UI
+     */
     private fun updateForecastWeather(lat: Double, lon: Double) {
         weatherViewModel.loadCurrentWeatherAndForecastByCoordinates(lat, lon)
             .enqueue(object : Callback<DailyWeatherAndForecastResponse> {
@@ -159,6 +169,9 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
             })
     }
 
+    /**
+     * Function to update the forecast weather UI (daily and hourly)
+     */
     private fun updateForecastDataUI(weatherData: DailyWeatherAndForecastResponse) {
         var forecastDataList = GenericUtils.filterForecastData(weatherData.daily);
         binding.forecastRv.visibility = View.VISIBLE
@@ -172,6 +185,9 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
         hourlyAdapter.notifyDataSetChanged()
     }
 
+    /**
+     * Function to make API call and call the function to update current weather UI
+     */
     private fun updateCurrentWeather(lat: Double, lon: Double) {
         weatherViewModel.loadCurrentWeatherByCoordinates(lat, lon)
             .enqueue(object : Callback<WeatherDataResponse> {
@@ -185,17 +201,21 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
                         updateCurrentWeatherUI(weatherData)
 
                     } else {
-                        binding.degreesTv.text = "Failed to get data from API";
+                        Log.e(TAG, "Failed to get data from API")
                     }
                 }
 
                 override fun onFailure(call: Call<WeatherDataResponse>, t: Throwable) {
-                    binding.degreesTv.text = "Failed to get data from API";
+                    Log.e(TAG, "Failed to get data from API")
                 }
 
             })
     }
 
+
+    /**
+     * Function to update the current weather UI
+     */
     private fun updateCurrentWeatherUI(weatherData: WeatherDataResponse) {
 
         binding.progressBar.visibility = View.GONE

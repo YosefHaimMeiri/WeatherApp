@@ -2,7 +2,7 @@ package com.example.weatherapponerobotixyossimeiri.models
 
 import com.google.gson.annotations.SerializedName
 
-data class Daily(
+data class DailyWeatherResponse(
     @SerializedName("clouds")       val clouds: Double,
     @SerializedName("dew_point")    val dew_point: Double,
     @SerializedName("dt")           val dt: Long,
