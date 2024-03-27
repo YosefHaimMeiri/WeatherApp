@@ -18,6 +18,7 @@ import com.example.weatherapponerobotixyossimeiri.strings.WeatherStrings
 import com.example.weatherapponerobotixyossimeiri.utils.GenericUtils
 import com.example.weatherapponerobotixyossimeiri.utils.LocationHelper
 import com.example.weatherapponerobotixyossimeiri.utils.PreferenceManagerHelper
+import com.example.weatherapponerobotixyossimeiri.utils.TimeUtils
 import com.example.weatherapponerobotixyossimeiri.viewmodels.LocationViewModel
 import com.example.weatherapponerobotixyossimeiri.viewmodels.WeatherViewModel
 import retrofit2.Call
@@ -56,7 +57,7 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
         forecastAdapter = ForecastDataAdapter(emptyList())
         binding.forecastRv.layoutManager = LinearLayoutManager(this)
 
-        if (weatherViewModel.currentWeatherData != null && weatherViewModel.forecastWeatherData != null) {
+        if (weatherViewModel.currentWeatherData != null && weatherViewModel.forecastWeatherData != null && !isNeedToUpdateData(preferenceManagerHelper.restoreUpdateTime())) {
             updateCurrentWeatherUI(weatherViewModel.currentWeatherData!!)
             updateForecastDataUI(weatherViewModel.forecastWeatherData!!)
         } else {
@@ -65,6 +66,23 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
             locationHelper.updateCurrentLocation()
 
         }
+    }
+
+
+    /**
+     * Function to check if we need to fetch the location and the API data again
+     * Cases where we fetch the location and data:
+     * 1. No data was ever saved in the Saved Preferences
+     * 2. 5 Minutes have passed since we last got the data
+     */
+    fun isNeedToUpdateData(restoreUpdateTime: Long) : Boolean{
+        var retVal = false;
+
+        var isMinutesPassed = TimeUtils.isMinutesPassed(restoreUpdateTime);
+
+        retVal = restoreUpdateTime == 0L || isMinutesPassed
+
+        return retVal;
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
