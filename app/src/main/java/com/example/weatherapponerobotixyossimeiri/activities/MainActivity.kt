@@ -7,8 +7,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.weatherapponerobotixyossimeiri.BuildConfig
 import com.example.weatherapponerobotixyossimeiri.R
 import com.example.weatherapponerobotixyossimeiri.adapters.ForecastDataAdapter
 import com.example.weatherapponerobotixyossimeiri.databinding.ActivityMainBinding
@@ -17,9 +17,9 @@ import com.example.weatherapponerobotixyossimeiri.models.WeatherDataResponse
 import com.example.weatherapponerobotixyossimeiri.strings.WeatherStrings
 import com.example.weatherapponerobotixyossimeiri.utils.GenericUtils
 import com.example.weatherapponerobotixyossimeiri.utils.LocationHelper
-import com.example.weatherapponerobotixyossimeiri.utils.WeatherCodeUtils
+import com.example.weatherapponerobotixyossimeiri.utils.PreferenceManagerHelper
+import com.example.weatherapponerobotixyossimeiri.viewmodels.LocationViewModel
 import com.example.weatherapponerobotixyossimeiri.viewmodels.WeatherViewModel
-import com.squareup.picasso.Picasso
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -30,7 +30,10 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
     lateinit var locationHelper: LocationHelper;
     lateinit var binding: ActivityMainBinding
     private lateinit var weatherViewModel:WeatherViewModel
+    private lateinit var locationViewModel: LocationViewModel
     private lateinit var forecastAdapter : ForecastDataAdapter
+    private lateinit var preferenceManagerHelper: PreferenceManagerHelper
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,18 +48,37 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
             insets
         }
 
-        locationHelper = LocationHelper(this)
-        locationHelper.setLocationChangeListener(this)
-        locationHelper.updateCurrentLocation()
-        weatherViewModel = WeatherViewModel()
+        preferenceManagerHelper = PreferenceManagerHelper(this)
+        locationViewModel = ViewModelProvider(this).get(LocationViewModel::class.java)
+        weatherViewModel = ViewModelProvider(this).get(WeatherViewModel::class.java)
+        weatherViewModel.currentWeatherData = preferenceManagerHelper.restoreWeatherData();
+        weatherViewModel.forecastWeatherData = preferenceManagerHelper.restoreForecastData()
         forecastAdapter = ForecastDataAdapter(emptyList())
         binding.forecastRv.layoutManager = LinearLayoutManager(this)
 
+        if (weatherViewModel.currentWeatherData != null && weatherViewModel.forecastWeatherData != null) {
+            updateCurrentWeatherUI(weatherViewModel.currentWeatherData!!)
+            updateForecastDataUI(weatherViewModel.forecastWeatherData!!)
+        } else {
+            locationHelper = LocationHelper(this)
+            locationHelper.setLocationChangeListener(this)
+            locationHelper.updateCurrentLocation()
 
+        }
     }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+    }
+
 
     override fun onStart() {
         super.onStart()
+
     }
 
     override fun onResume() {
@@ -90,11 +112,8 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
                 ) {
                     if (response.isSuccessful && response.body() != null) {
                         var weatherData: DailyWeatherAndForecastResponse = response.body()!!
-                        weatherViewModel.forecastWeatherData = weatherData;
-                        var forecastDataList = GenericUtils.filterForecastData(weatherData.daily);
-                        forecastAdapter = ForecastDataAdapter(forecastDataList);
-                        forecastAdapter.notifyDataSetChanged();
-                        binding.forecastRv.adapter = forecastAdapter;
+                        preferenceManagerHelper.saveForecastData(weatherData)
+                        updateForecastDataUI(weatherData)
 
                     } else {
                         Log.e(TAG, response.message())
@@ -109,6 +128,13 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
             })
     }
 
+    private fun updateForecastDataUI(weatherData: DailyWeatherAndForecastResponse) {
+        var forecastDataList = GenericUtils.filterForecastData(weatherData.daily);
+        forecastAdapter = ForecastDataAdapter(forecastDataList);
+        binding.forecastRv.adapter = forecastAdapter;
+        forecastAdapter.notifyDataSetChanged();
+    }
+
     private fun updateCurrentWeather(lat: Double, lon: Double) {
         weatherViewModel.loadCurrentWeatherByCoordinates(lat, lon)
             .enqueue(object : Callback<WeatherDataResponse> {
@@ -118,7 +144,7 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
                 ) {
                     if (response.isSuccessful && response.body() != null) {
                         var weatherData: WeatherDataResponse = response.body()!!
-                        weatherViewModel.currentWeatherData = weatherData;
+                        preferenceManagerHelper.saveWeatherData(weatherData);
                         updateCurrentWeatherUI(weatherData)
 
                     } else {

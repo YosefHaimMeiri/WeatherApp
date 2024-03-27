@@ -60,5 +60,5 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.google.android.gms:play-services-location:18.0.0")
     implementation("com.squareup.picasso:picasso:2.71828")
-
+    implementation("androidx.preference:preference-ktx:1.1.1")
 }
