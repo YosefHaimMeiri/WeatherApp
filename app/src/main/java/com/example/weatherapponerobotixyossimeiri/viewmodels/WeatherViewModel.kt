@@ -12,7 +12,7 @@ import retrofit2.Call
 class WeatherViewModel(val repo : WeatherDataRepo) : ViewModel(){
     // Cached data
     var currentWeatherData: WeatherDataResponse? = null
-    var forecastWeatherData: WeatherForecastResponse? = null
+    var forecastWeatherData: DailyWeatherAndForecastResponse? = null
 
     constructor() : this(WeatherDataRepo(WeatherApiClient.getClient().create(IWeatherApiService::class.java)))
 
@@ -22,14 +22,5 @@ class WeatherViewModel(val repo : WeatherDataRepo) : ViewModel(){
 
     fun loadCurrentWeatherAndForecastByCoordinates(lat: Double, lon: Double): Call<DailyWeatherAndForecastResponse> {
         return repo.getDailyWeatherAndForecastByCoordinates(lat,lon);
-    }
-
-
-    fun loadForecastByCoordinates(lat: Double, lon: Double): Call<WeatherForecastResponse> {
-        return repo.getForecastByCoordinates(lat,lon);
-    }
-
-    fun loadCurrentWeatherByCityCountry(city: String, country: String): Call<WeatherDataResponse> {
-        return repo.getCurrentWeatherByCityCountry(city,country);
     }
 }

@@ -15,24 +15,10 @@ interface IWeatherApiService {
         @Query("appid") apiKey: String?
     ): Call<WeatherDataResponse>
 
-    @GET("2.5/forecast")
-    fun getForecastByCoordinates(
-        @Query("lat") latitude: Double,
-        @Query("lon") longitude: Double,
-        @Query("appid") apiKey: String?
-    ): Call<WeatherForecastResponse>
-
     @GET("3.0/onecall")
     fun getCurrentWeatherAndForecastByCoordinates(
         @Query("lat") latitude: Double,
         @Query("lon") longitude: Double,
         @Query("appid") apiKey: String?
     ): Call<DailyWeatherAndForecastResponse>
-
-
-    @GET("weather")
-    fun getCurrentWeatherByCityAndCountry(
-        @Query("q") cityCountry: String?,
-        @Query("appid") apiKey: String?
-    ): Call<WeatherDataResponse>
 }

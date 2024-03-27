@@ -91,6 +91,7 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
                 ) {
                     if (response.isSuccessful && response.body() != null) {
                         var weatherData: DailyWeatherAndForecastResponse = response.body()!!
+                        weatherViewModel.forecastWeatherData = weatherData;
                         var forecastDataList = GenericUtils.filterForecastData(weatherData.daily);
                         forecastAdapter = ForecastDataAdapter(forecastDataList);
                         forecastAdapter.notifyDataSetChanged();
