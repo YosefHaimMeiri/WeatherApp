@@ -1,6 +1,7 @@
 package com.example.weatherapponerobotixyossimeiri.activities
 
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
@@ -43,28 +44,54 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        initializeViews()
+        initializeViewModels()
+        initHelpersAndAdapter()
+        checkAndUpdateDataAndUI()
+    }
+
+    private fun checkAndUpdateDataAndUI() {
+        weatherViewModel.currentWeatherData = preferenceManagerHelper.restoreWeatherData();
+        weatherViewModel.forecastWeatherData = preferenceManagerHelper.restoreForecastData()
+
+        if (weatherViewModel.currentWeatherData != null && weatherViewModel.forecastWeatherData != null && !isNeedToUpdateData(
+                preferenceManagerHelper.restoreUpdateTime()
+            )
+        ) {
+            updateCurrentWeatherUI(weatherViewModel.currentWeatherData!!)
+            updateForecastDataUI(weatherViewModel.forecastWeatherData!!)
+        } else {
+            locationHelper.updateCurrentLocation()
+        }
+    }
+
+    private fun initializeViewModels() {
+        locationViewModel = ViewModelProvider(this).get(LocationViewModel::class.java)
+        weatherViewModel = ViewModelProvider(this).get(WeatherViewModel::class.java)
+    }
+
+    private fun initHelpersAndAdapter() {
+        preferenceManagerHelper = PreferenceManagerHelper(this)
+        locationHelper = LocationHelper(this)
+        locationHelper.setLocationChangeListener(this)
+        forecastAdapter = ForecastDataAdapter(emptyList())
+    }
+
+    private fun initializeViews() {
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-        preferenceManagerHelper = PreferenceManagerHelper(this)
-        locationViewModel = ViewModelProvider(this).get(LocationViewModel::class.java)
-        weatherViewModel = ViewModelProvider(this).get(WeatherViewModel::class.java)
-        weatherViewModel.currentWeatherData = preferenceManagerHelper.restoreWeatherData();
-        weatherViewModel.forecastWeatherData = preferenceManagerHelper.restoreForecastData()
-        forecastAdapter = ForecastDataAdapter(emptyList())
         binding.forecastRv.layoutManager = LinearLayoutManager(this)
-
-        if (weatherViewModel.currentWeatherData != null && weatherViewModel.forecastWeatherData != null && !isNeedToUpdateData(preferenceManagerHelper.restoreUpdateTime())) {
-            updateCurrentWeatherUI(weatherViewModel.currentWeatherData!!)
-            updateForecastDataUI(weatherViewModel.forecastWeatherData!!)
-        } else {
-            locationHelper = LocationHelper(this)
-            locationHelper.setLocationChangeListener(this)
+        binding.swipeRefresh.setOnRefreshListener {
+            binding.degreesTv.text = "---"
             locationHelper.updateCurrentLocation()
-
+            binding.progressBar.visibility = View.VISIBLE
+            binding.forecastRv.visibility = View.GONE
+            Handler().postDelayed(Runnable {
+                binding.swipeRefresh.isRefreshing = false
+            }, 0)
         }
     }
 
@@ -149,6 +176,7 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
 
     private fun updateForecastDataUI(weatherData: DailyWeatherAndForecastResponse) {
         var forecastDataList = GenericUtils.filterForecastData(weatherData.daily);
+        binding.forecastRv.visibility = View.VISIBLE
         forecastAdapter = ForecastDataAdapter(forecastDataList);
         binding.forecastRv.adapter = forecastAdapter;
         forecastAdapter.notifyDataSetChanged();
@@ -210,5 +238,6 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
         }
 ;
     }
+
 
 }
