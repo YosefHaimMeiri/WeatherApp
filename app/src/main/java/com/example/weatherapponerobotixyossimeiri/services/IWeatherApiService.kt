@@ -2,7 +2,6 @@ package com.example.weatherapponerobotixyossimeiri.services
 
 import com.example.weatherapponerobotixyossimeiri.models.DailyWeatherAndForecastResponse
 import com.example.weatherapponerobotixyossimeiri.models.WeatherDataResponse
-import com.example.weatherapponerobotixyossimeiri.models.WeatherForecastResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query

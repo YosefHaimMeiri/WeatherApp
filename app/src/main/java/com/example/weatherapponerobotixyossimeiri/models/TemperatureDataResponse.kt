@@ -1,6 +1,6 @@
 package com.example.weatherapponerobotixyossimeiri.models
 
-data class Temp(
+data class TemperatureDataResponse(
     val day: Double,
     val eve: Double,
     val max: Double,

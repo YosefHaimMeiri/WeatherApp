@@ -3,7 +3,6 @@ package com.example.weatherapponerobotixyossimeiri.viewmodels
 import androidx.lifecycle.ViewModel
 import com.example.weatherapponerobotixyossimeiri.models.DailyWeatherAndForecastResponse
 import com.example.weatherapponerobotixyossimeiri.models.WeatherDataResponse
-import com.example.weatherapponerobotixyossimeiri.models.WeatherForecastResponse
 import com.example.weatherapponerobotixyossimeiri.repos.WeatherDataRepo
 import com.example.weatherapponerobotixyossimeiri.services.IWeatherApiService
 import com.example.weatherapponerobotixyossimeiri.services.WeatherApiClient

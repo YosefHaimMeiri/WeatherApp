@@ -12,7 +12,7 @@ data class ForecastDataResponse(
     val temp: Double,
     val uvi: Double,
     val visibility: Int,
-    val weather: List<Weather>,
+    val weather: List<WeatherConditionsResponse>,
     val wind_deg: Double,
     val wind_gust: Double,
     val wind_speed: Double

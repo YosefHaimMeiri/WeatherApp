@@ -14,7 +14,6 @@ import com.example.weatherapponerobotixyossimeiri.adapters.ForecastDataAdapter
 import com.example.weatherapponerobotixyossimeiri.databinding.ActivityMainBinding
 import com.example.weatherapponerobotixyossimeiri.models.DailyWeatherAndForecastResponse
 import com.example.weatherapponerobotixyossimeiri.models.WeatherDataResponse
-import com.example.weatherapponerobotixyossimeiri.models.WeatherForecastResponse
 import com.example.weatherapponerobotixyossimeiri.strings.WeatherStrings
 import com.example.weatherapponerobotixyossimeiri.utils.GenericUtils
 import com.example.weatherapponerobotixyossimeiri.utils.LocationHelper

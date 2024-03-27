@@ -8,7 +8,6 @@ import retrofit2.converter.gson.GsonConverterFactory
  */
 class WeatherApiClient {
 
-
     companion object {
         private lateinit var retrofit: Retrofit
         private val BASE_URL = "https://api.openweathermap.org/data/"
