@@ -114,6 +114,7 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
             if (lat != null && lon != null) {
                 updateCurrentWeather(lat, lon)
                 updateForecastWeather(lat, lon)
+                preferenceManagerHelper.saveUpdateTime()
             }
 
         } else {
