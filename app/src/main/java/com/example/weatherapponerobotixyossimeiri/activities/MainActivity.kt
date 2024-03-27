@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.weatherapponerobotixyossimeiri.R
 import com.example.weatherapponerobotixyossimeiri.adapters.ForecastDataAdapter
+import com.example.weatherapponerobotixyossimeiri.adapters.HourlyDataAdapter
 import com.example.weatherapponerobotixyossimeiri.databinding.ActivityMainBinding
 import com.example.weatherapponerobotixyossimeiri.models.DailyWeatherAndForecastResponse
 import com.example.weatherapponerobotixyossimeiri.models.WeatherDataResponse
@@ -34,6 +35,7 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
     private lateinit var weatherViewModel:WeatherViewModel
     private lateinit var locationViewModel: LocationViewModel
     private lateinit var forecastAdapter : ForecastDataAdapter
+    private lateinit var hourlyAdapter : HourlyDataAdapter
     private lateinit var preferenceManagerHelper: PreferenceManagerHelper
 
 
@@ -75,6 +77,7 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
         locationHelper = LocationHelper(this)
         locationHelper.setLocationChangeListener(this)
         forecastAdapter = ForecastDataAdapter(emptyList())
+        hourlyAdapter = HourlyDataAdapter(emptyList())
     }
 
     private fun initializeViews() {
@@ -84,6 +87,7 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
             insets
         }
         binding.forecastRv.layoutManager = LinearLayoutManager(this)
+        binding.hourlyRv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         binding.swipeRefresh.setOnRefreshListener {
             binding.degreesTv.text = "---"
             locationHelper.updateCurrentLocation()
@@ -177,9 +181,13 @@ class MainActivity : AppCompatActivity(), LocationHelper.LocationChangeListener 
     private fun updateForecastDataUI(weatherData: DailyWeatherAndForecastResponse) {
         var forecastDataList = GenericUtils.filterForecastData(weatherData.daily);
         binding.forecastRv.visibility = View.VISIBLE
-        forecastAdapter = ForecastDataAdapter(forecastDataList);
+        binding.hourlyRv.visibility = View.VISIBLE
+        hourlyAdapter = HourlyDataAdapter(weatherData.hourly)
+        forecastAdapter = ForecastDataAdapter(forecastDataList)
         binding.forecastRv.adapter = forecastAdapter;
+        binding.hourlyRv.adapter = hourlyAdapter
         forecastAdapter.notifyDataSetChanged();
+        hourlyAdapter.notifyDataSetChanged()
     }
 
     private fun updateCurrentWeather(lat: Double, lon: Double) {

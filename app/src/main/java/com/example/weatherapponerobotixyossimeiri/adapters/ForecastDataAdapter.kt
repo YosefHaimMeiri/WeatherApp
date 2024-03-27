@@ -1,19 +1,14 @@
 package com.example.weatherapponerobotixyossimeiri.adapters
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.weatherapponerobotixyossimeiri.databinding.ActivityMainBinding
-import com.example.weatherapponerobotixyossimeiri.databinding.ForecastBinding
+import com.example.weatherapponerobotixyossimeiri.databinding.DailyForecastBinding
 import com.example.weatherapponerobotixyossimeiri.models.Daily
-import com.example.weatherapponerobotixyossimeiri.models.WeatherDataResponse
 import com.example.weatherapponerobotixyossimeiri.strings.WeatherStrings
 import com.example.weatherapponerobotixyossimeiri.utils.GenericUtils
 import com.example.weatherapponerobotixyossimeiri.utils.WeatherCodeUtils
 import com.squareup.picasso.Picasso
-import java.text.SimpleDateFormat
-import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Locale
 
@@ -21,16 +16,16 @@ class ForecastDataAdapter(
     private val weatherDataList: List<Daily>
 ) : RecyclerView.Adapter<ForecastDataAdapter.ViewHolder>() {
 
-    lateinit var binding: ForecastBinding
+    lateinit var binding: DailyForecastBinding
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context);
-        binding = ForecastBinding.inflate(inflater, parent, false);
+        binding = DailyForecastBinding.inflate(inflater, parent, false);
         return ViewHolder()
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val binding =  ForecastBinding.bind(holder.itemView);
+        val binding =  DailyForecastBinding.bind(holder.itemView);
 
         // Set the day
 

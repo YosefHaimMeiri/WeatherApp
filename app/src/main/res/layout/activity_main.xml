@@ -205,6 +205,17 @@
 
             </LinearLayout>
 
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/hourlyRv"
+                android:paddingTop="10dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:visibility="gone"
                 android:id="@+id/forecastRv"

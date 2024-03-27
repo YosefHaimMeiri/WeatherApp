@@ -1,5 +1,10 @@
 package com.example.weatherapponerobotixyossimeiri.utils
 
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
+
 class TimeUtils {
 
 
@@ -19,5 +24,12 @@ class TimeUtils {
 
             return retVal
         }
+
+        fun convertUnixTimestampToHour(unixTimestamp: Long): String {
+            val formatter = SimpleDateFormat("HH:mm")
+            val date = Date(unixTimestamp)
+            return formatter.format(date)
+        }
+
     }
 }
